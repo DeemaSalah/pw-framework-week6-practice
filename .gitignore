@@ -1,0 +1,12 @@
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+results/
+
+# Secrets. Never committed - that is the whole point of them.
+.env
+.auth/
+
+# Built by Maven if you run the Selenium example
+selenium/target/

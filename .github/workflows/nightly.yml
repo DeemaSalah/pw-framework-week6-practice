@@ -1,0 +1,65 @@
+# Every browser, every weekday night - plus a "Run workflow" button for when you want it now.
+# Too slow to run on every push; too important never to run at all.
+
+name: Nightly - every browser
+
+on:
+  schedule:
+    # Minute hour day-of-month month day-of-week, in UTC unless you add a timezone: 03:17 UTC, Monday to Friday.
+    # Not on the hour - the top of the hour is GitHub's busiest moment, and runs get delayed.
+    # Schedules run only on the default branch (main).
+    - cron: '17 3 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      # One red browser must not cancel the others - you want all four answers.
+      fail-fast: false
+      matrix:
+        # The setup step signs in with Chromium in every job, so every job needs Chromium too.
+        include:
+          - project: chromium
+            browsers: chromium
+          - project: firefox
+            browsers: chromium firefox
+          - project: webkit
+            browsers: chromium webkit
+          - project: mobile # a Pixel 7 screen, on Chromium
+            browsers: chromium
+    env:
+      SHOP_PASSWORD: ${{ secrets.SHOP_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install ${{ matrix.browsers }}
+        run: npx playwright install --with-deps ${{ matrix.browsers }}
+
+      - name: Run the tests on ${{ matrix.project }}
+        run: npx playwright test --project=${{ matrix.project }}
+
+      - name: Write the summary
+        if: ${{ !cancelled() }}
+        run: node scripts/summary.mjs "${{ matrix.project }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: report-${{ matrix.project }} # four jobs, four reports - each needs its own name
+          path: playwright-report/
+          retention-days: 14

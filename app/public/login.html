@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · Toolshop</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/">Toolshop</a></header>
+  <main class="auth">
+    <h1>Sign in</h1>
+    <form data-test="login-form" novalidate>
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" autocomplete="username" data-test="email">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" data-test="password">
+      <p class="error" role="alert" data-test="login-error" hidden></p>
+      <button class="primary" type="submit" data-test="login-submit">Sign in</button>
+    </form>
+    <p>New here? <a href="/register">Create an account</a></p>
+  </main>
+  <script src="/app.js"></script>
+  <script>
+    const form = document.querySelector('form');
+    const error = document.querySelector('[data-test="login-error"]');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      error.hidden = true;
+      const email = form.elements.email.value.trim();
+      const password = form.elements.password.value;
+      if (!email) return showMessage(error, 'Enter your email address');
+      if (!password) return showMessage(error, 'Enter your password');
+      const res = await api('/api/login', { method: 'POST', body: { email, password } });
+      if (!res.ok) return showMessage(error, res.data.error);
+      location.assign('/');
+    });
+  </script>
+</body>
+</html>

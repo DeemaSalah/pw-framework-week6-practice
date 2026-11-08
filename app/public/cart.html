@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your cart · Toolshop</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header id="site-header"></header>
+  <main>
+    <h1>Your cart</h1>
+    <div class="notice" role="status" data-test="order-confirmation" hidden>
+      Order confirmed. Your order number is <strong data-test="order-number"></strong>.
+    </div>
+    <p class="notice" data-test="cart-empty" hidden>Your cart is empty.</p>
+    <div data-test="cart" hidden>
+      <table aria-label="Cart">
+        <thead><tr><th>Product</th><th>Price</th><th>Quantity</th><th>Total</th><th><span hidden>Actions</span></th></tr></thead>
+        <tbody></tbody>
+        <tfoot><tr><td colspan="3">Order total</td><td data-test="cart-total"></td><td></td></tr></tfoot>
+      </table>
+      <div class="actions"><button type="button" class="primary" data-test="place-order">Place order</button></div>
+    </div>
+  </main>
+  <script src="/app.js"></script>
+  <script>
+    const tbody = document.querySelector('tbody');
+    const cartBox = document.querySelector('[data-test="cart"]');
+    const empty = document.querySelector('[data-test="cart-empty"]');
+    let current = null;
+
+    function row(line) {
+      const tr = document.createElement('tr');
+      tr.dataset.test = `line-${line.productId}`;
+      tr.innerHTML = `<td data-test="line-name"></td><td></td>
+        <td><input type="number" min="0" data-test="quantity"></td>
+        <td data-test="line-total"></td>
+        <td><button type="button" class="link-button">Remove</button></td>`;
+      tr.cells[0].textContent = line.name;
+      tr.cells[1].textContent = line.price;
+      const qty = tr.querySelector('input');
+      qty.value = line.quantity;
+      qty.setAttribute('aria-label', `Quantity for ${line.name}`);
+      tr.querySelector('[data-test="line-total"]').textContent = line.lineTotal;
+      const commit = async () => {
+        const res = await api(`/api/cart/${line.productId}`, { method: 'PUT', body: { quantity: Number(qty.value) } });
+        if (res.ok) render(res.data);
+      };
+      qty.addEventListener('change', commit);
+      qty.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); qty.blur(); } });
+      const remove = tr.querySelector('button');
+      remove.setAttribute('aria-label', `Remove ${line.name}`);
+      remove.addEventListener('click', async () => {
+        const res = await api(`/api/cart/${line.productId}`, { method: 'DELETE' });
+        if (res.ok) render(res.data);
+      });
+      return tr;
+    }
+
+    function render(cart) {
+      current = cart;
+      setCartCount(cart.count);
+      empty.hidden = cart.lines.length > 0;
+      cartBox.hidden = cart.lines.length === 0;
+      tbody.replaceChildren(...cart.lines.map(row));
+      document.querySelector('[data-test="cart-total"]').textContent = cart.total;
+    }
+
+    document.querySelector('[data-test="place-order"]').addEventListener('click', async () => {
+      if (!confirm(`Place this order for ${current.total}?`)) return;
+      const res = await api('/api/orders', { method: 'POST' });
+      if (!res.ok) return;
+      document.querySelector('[data-test="order-number"]').textContent = res.data.orderId;
+      document.querySelector('[data-test="order-confirmation"]').hidden = false;
+      render({ lines: [], count: 0, total: '$0.00' });
+    });
+
+    requireUser().then(async () => {
+      const cart = await api('/api/cart');
+      render(cart.data);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+# Runs on every push to main and on every pull request into it.
+# This is the quality gate: typecheck, then the whole suite on Chromium.
+# If any step fails, the run is red - and a ruleset can stop a red pull request from merging.
+
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # adds a "Run workflow" button on the Actions tab
+
+# A newer push to the same branch cancels the older run, instead of queueing behind it.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+# The workflow can read the code and nothing else. Give it only what it needs.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Typecheck and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # From Settings -> Secrets and variables -> Actions. Never written in this file.
+      # GitHub hides it in the log as ***. It does NOT hide it inside files you upload.
+      SHOP_PASSWORD: ${{ secrets.SHOP_PASSWORD }}
+
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm # reuse downloaded packages between runs
+
+      - name: Install dependencies
+        run: npm ci # exactly what package-lock.json says - never "whatever is newest today"
+
+      - name: Typecheck
+        run: npm run typecheck # a broken import fails here in seconds, before any browser starts
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run the tests
+        run: npm test
+
+      # The steps below run even when the tests failed - that is when you need them most.
+      # (!cancelled() means: unless somebody pressed Cancel.)
+      - name: Write the summary
+        if: ${{ !cancelled() }}
+        run: node scripts/summary.mjs >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

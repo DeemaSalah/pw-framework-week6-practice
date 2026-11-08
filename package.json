@@ -1,0 +1,27 @@
+{
+  "name": "pw-framework",
+  "version": "6.0.0",
+  "description": "Week 6 starter - the Week 5 framework, now running in a pipeline, on every browser, with accessibility, performance and security checks",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --project=chromium",
+    "test:all": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "ui": "playwright test --ui --project=chromium",
+    "report": "playwright show-report",
+    "summary": "node scripts/summary.mjs",
+    "explore": "playwright test --config explore.config.ts",
+    "museum": "playwright test --config museum.config.ts",
+    "perf": "node perf/load.mjs",
+    "shop": "node app/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "~4.14.0",
+    "@playwright/test": "~1.63.0",
+    "@types/node": "^22.0.0",
+    "typescript": "~5.9.3"
+  }
+}

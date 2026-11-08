@@ -1,0 +1,18 @@
+{
+  "_comment": "The shop's starting data. The customer's password is stored as a salted hash, the way a real application stores it, so it is not in this repository anywhere. Your mentor will give it to you.",
+  "users": [
+    {
+      "id": "u-customer",
+      "name": "Casey Customer",
+      "email": "customer@practice.test",
+      "salt": "b690bc8fbc661602",
+      "passwordHash": "bcbacc6e142239ab85a87b2ffebcde3732a2b1e2cf0f3b4d01999819a80f0d54"
+    }
+  ],
+  "products": [
+    { "id": "p1", "name": "Combination Pliers", "priceCents": 1415 },
+    { "id": "p2", "name": "Claw Hammer", "priceCents": 1258 },
+    { "id": "p3", "name": "Bolt Cutters", "priceCents": 4841 },
+    { "id": "p4", "name": "Cordless Drill", "priceCents": 8955 }
+  ]
+}

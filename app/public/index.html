@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Products · Toolshop</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header id="site-header"></header>
+  <div class="promo" data-test="promo">
+    <p>Free delivery on orders over $50 - this week only</p>
+    <button type="button" class="promo-close" data-test="promo-close">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+  </div>
+  <main>
+    <h1>Products</h1>
+    <p class="notice" role="status" data-test="welcome" hidden></p>
+    <p data-test="products-loading">Loading products…</p>
+    <div class="error" role="alert" data-test="products-error" hidden>
+      We could not load products. Please try again.
+      <button type="button" class="link-button" data-test="products-retry">Try again</button>
+    </div>
+    <p class="notice" data-test="products-empty" hidden>No products available right now.</p>
+    <ul class="products" aria-label="Products" data-test="product-list"></ul>
+  </main>
+  <footer class="newsletter">
+    <h2>Tool tips, once a month</h2>
+    <form data-test="newsletter-form">
+      <input type="email" placeholder="Your email address" data-test="newsletter-email">
+      <button type="submit" class="primary">Subscribe</button>
+    </form>
+    <p class="small-print" data-test="newsletter-done" hidden>Thanks - see you next month.</p>
+    <p class="small-print">No spam. Unsubscribe any time with one click.</p>
+  </footer>
+  <script src="/app.js"></script>
+  <script>
+    const list = document.querySelector('[data-test="product-list"]');
+    const loading = document.querySelector('[data-test="products-loading"]');
+    const failed = document.querySelector('[data-test="products-error"]');
+    const empty = document.querySelector('[data-test="products-empty"]');
+
+    function card(product) {
+      const li = document.createElement('li');
+      li.className = 'card';
+      li.dataset.test = `product-${product.id}`;
+      li.innerHTML = '<h2></h2><p class="price" data-test="price"></p><button type="button">Add to cart</button>';
+      li.querySelector('h2').textContent = product.name;
+      li.querySelector('.price').textContent = product.price;
+      li.querySelector('button').addEventListener('click', async () => {
+        const res = await api('/api/cart', { method: 'POST', body: { productId: product.id, quantity: 1 } });
+        if (res.ok) setCartCount(res.data.count);
+      });
+      return li;
+    }
+
+    async function loadProducts() {
+      loading.hidden = false;
+      failed.hidden = true;
+      empty.hidden = true;
+      list.replaceChildren();
+      const res = await api('/api/products');
+      loading.hidden = true;
+      if (!res.ok) { failed.hidden = false; return; }
+      if (res.data.length === 0) { empty.hidden = false; return; }
+      list.replaceChildren(...res.data.map(card));
+    }
+
+    document.querySelector('[data-test="products-retry"]').addEventListener('click', loadProducts);
+
+    document.querySelector('[data-test="promo-close"]').addEventListener('click', () => {
+      document.querySelector('[data-test="promo"]').hidden = true;
+    });
+    document.querySelector('[data-test="newsletter-form"]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.querySelector('[data-test="newsletter-done"]').hidden = false;
+    });
+
+    requireUser().then((user) => {
+      if (new URLSearchParams(location.search).has('welcome')) {
+        showMessage(document.querySelector('[data-test="welcome"]'), `Welcome to Toolshop, ${user.name}`);
+      }
+      loadProducts();
+    });
+  </script>
+</body>
+</html>
