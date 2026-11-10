@@ -1,5 +1,8 @@
 # pw-framework — Week 6 starter
 
+[![Tests](https://github.com/DeemaSalah/pw-framework-week6-practice/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/DeemaSalah/pw-framework-week6-practice/actions/workflows/tests.yml)
+[![Nightly - every browser](https://github.com/DeemaSalah/pw-framework-week6-practice/actions/workflows/nightly.yml/badge.svg?branch=main)](https://github.com/DeemaSalah/pw-framework-week6-practice/actions/workflows/nightly.yml)
+
 Week 5 turned a pile of scripts into a framework. This week it runs without you: on every push,
 every night on three browsers and a phone-sized screen, with a gate that stops a red pull request from merging. And it
 goes looking for the problems functional tests never see — on a phone, with a keyboard, under
