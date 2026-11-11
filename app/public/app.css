@@ -1,3 +1,4 @@
+
 :root {
   --green: #1e4d33;
   --green-2: #1f9e57;
@@ -9,54 +10,300 @@
   --red: #a0442f;
   --red-tint: #f6e7e0;
 }
-* { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--paper); }
-a { color: var(--green); }
-.site-header { display: flex; align-items: center; gap: 24px; padding: 14px 32px; background: var(--green); color: #fff; }
-.site-header a { color: #fff; text-decoration: none; }
-.brand { font-weight: 700; font-size: 20px; letter-spacing: 0.5px; }
-.site-header nav { display: flex; gap: 18px; flex: 1; }
-.cart-link span { display: inline-block; min-width: 22px; padding: 1px 7px; margin-left: 4px; border-radius: 11px; background: var(--green-2); text-align: center; font-weight: 700; }
-.who { opacity: 0.85; font-size: 14px; }
-.site-header button { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
-main { max-width: 960px; margin: 0 auto; padding: 32px; }
-h1 { color: var(--green); margin-top: 0; }
-.notice { padding: 12px 16px; border-radius: 8px; background: var(--tint); margin-bottom: 16px; }
-.error { padding: 12px 16px; border-radius: 8px; background: var(--red-tint); color: var(--red); margin: 12px 0; }
-.products { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-.card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
-.card h2 { font-size: 17px; margin: 0; overflow-wrap: anywhere; }
-.card .price { font-size: 18px; font-weight: 700; margin: 0; }
-button.primary, .card button { background: var(--green); color: #fff; border: 0; border-radius: 6px; padding: 10px 14px; font-size: 15px; cursor: pointer; }
-.card button { margin-top: auto; }
-.auth { max-width: 420px; }
-form { display: flex; flex-direction: column; gap: 8px; }
-label { font-weight: 600; margin-top: 8px; }
-input { padding: 10px 12px; border: 1px solid #b9c4bc; border-radius: 6px; font-size: 15px; }
-.hint { color: var(--muted); font-size: 13px; margin: 0; }
-form button { margin-top: 14px; }
-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
-th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
-td input { width: 80px; }
-tfoot td { font-weight: 700; font-size: 18px; border-bottom: 0; }
-.actions { margin-top: 20px; display: flex; justify-content: flex-end; }
-.link-button { background: none; border: 0; color: var(--red); cursor: pointer; text-decoration: underline; }
 
-.promo { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 32px; background: var(--tint); }
-.promo p { margin: 0; font-size: 14px; color: #8db59a; }
-.promo-close { background: none; border: 0; padding: 4px; color: var(--green); cursor: pointer; }
-.promo[hidden] { display: none; }
-.newsletter { max-width: 960px; margin: 0 auto; padding: 8px 32px 40px; }
-.newsletter h2 { font-size: 18px; color: var(--green); }
-.newsletter form { flex-direction: row; flex-wrap: wrap; gap: 8px; }
-.newsletter input { flex: 1; min-width: 200px; }
-.newsletter button { margin-top: 0; }
-.small-print { font-size: 12px; color: #a3aca6; }
-button:focus { outline: none; }
+* {
+  box-sizing: border-box;
+}
+
+body { 
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+a {
+  color: var(--green);
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 32px;
+  background: var(--green);
+  color: #fff;
+}
+
+.site-header a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+.site-header nav {
+  display: flex;
+  gap: 18px;
+  flex: 1;
+}
+
+.cart-link span {
+  display: inline-block;
+  min-width: 22px;
+  padding: 1px 7px;
+  margin-left: 4px;
+  border-radius: 11px;
+  background: var(--green-2);
+  text-align: center;
+  font-weight: 700;
+}
+
+.who {
+  opacity: 0.85;
+  font-size: 14px;
+}
+
+.site-header button {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+h1 {
+  color: var(--green);
+  margin-top: 0;
+}
+
+.notice {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--tint);
+  margin-bottom: 16px;
+}
+
+.error {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--red-tint);
+  color: var(--red);
+  margin: 12px 0;
+}
+
+.products {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card h2 {
+  font-size: 17px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.card .price {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+button.primary,
+.card button {
+  background: var(--green);
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.card button {
+  margin-top: auto;
+}
+
+.auth {
+  max-width: 420px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+input {
+  padding: 10px 12px;
+  border: 1px solid #b9c4bc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+form button {
+  margin-top: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+td input {
+  width: 80px;
+}
+
+tfoot td {
+  font-weight: 700;
+  font-size: 18px;
+  border-bottom: 0;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.link-button {
+  background: none;
+  border: 0;
+  color: var(--red);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.promo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 32px;
+  background: var(--tint);
+}
+
+.promo p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--green);
+}
+
+.promo-close {
+  background: none;
+  border: 0;
+  padding: 4px;
+  color: var(--green);
+  cursor: pointer;
+}
+
+.promo[hidden] {
+  display: none;
+}
+
+.newsletter {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 8px 32px 40px;
+}
+
+.newsletter h2 {
+  font-size: 18px;
+  color: var(--green);
+}
+
+.newsletter form {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.newsletter input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.newsletter button {
+  margin-top: 0;
+}
+
+.small-print {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+button:focus {
+  outline: none;
+}
+
 @media (max-width: 600px) {
-  .site-header { flex-wrap: wrap; gap: 8px 16px; padding: 12px 16px; }
-  .site-header .who { order: 3; flex-basis: 100%; overflow-wrap: anywhere; }
-  main { padding: 20px 16px; }
-  th, td { padding: 10px 6px; }
-  td input { width: 56px; }
+  .site-header {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 12px 16px;
+  }
+
+  .site-header .who {
+    order: 3;
+    flex-basis: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  main {
+    padding: 20px 16px;
+  }
+
+  th,
+  td {
+    padding: 10px 6px;
+  }
+
+  td input {
+    width: 56px;
+  }
 }
