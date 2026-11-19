@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,7 +29,8 @@
   <footer class="newsletter">
     <h2>Tool tips, once a month</h2>
     <form data-test="newsletter-form">
-      <input type="email" placeholder="Your email address" data-test="newsletter-email">
+      <label for="newsletter-email">Email address</label>
+      <input id="newsletter-email" type="email" autocomplete="email" data-test="newsletter-email">
       <button type="submit" class="primary">Subscribe</button>
     </form>
     <p class="small-print" data-test="newsletter-done" hidden>Thanks - see you next month.</p>

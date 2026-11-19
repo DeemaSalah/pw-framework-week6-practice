@@ -272,13 +272,19 @@ tfoot td {
   margin-top: 0;
 }
 
+.newsletter label {
+  flex-basis: 100%;
+  margin-top: 0;
+}
+
 .small-print {
   font-size: 12px;
   color: var(--muted);
 }
 
-button:focus {
-  outline: none;
+button:focus-visible {
+  outline: 3px solid var(--green-2);
+  outline-offset: 2px;
 }
 
 @media (max-width: 600px) {
