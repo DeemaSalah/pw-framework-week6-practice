@@ -1,39 +1,58 @@
-# <Title: what is wrong, where, and for whom - in one line>
+# Any signed-in customer can read another customer's order by its number
 
-A good title lets someone triage the bug without opening it.
-Weak: "Orders bug". Strong: "Any signed-in customer can read any other customer's order by its number".
+**Severity:** Major
 
-**Severity:** Critical / Major / Minor / Trivial — how much damage it does
-**Priority:** P1 / P2 / P3 — how soon it must be fixed (the team decides; you propose)
-**Found by:** <test name, or "exploratory testing">  ·  **Environment:** <build, URL, browser, device>
+**Priority:** P1 (Proposed)
+
+**Found by:** `a customer cannot open another customer's order` — `explore/order-privacy.spec.ts`
+
+**Environment:** Local Toolshop demo · Chromium · `http://localhost:4175`
 
 ## Steps to reproduce
 
-1.
-2.
-3.
+1. Sign in as Customer A.
+2. Add a product to the cart and place an order using `shopApi.addToCart()` and `shopApi.placeOrder()`.
+3. Save the generated `orderId`.
+4. Sign in as Customer B using a separate request context and cookie jar.
+5. Request Customer A's order using `GET /api/orders/{orderId}`.
 
-Short, numbered, starting from somewhere anyone can get to. If a test reproduces it, name the
-test and the command — that is the best set of steps there is.
+**Automation command:**
+
+```bash
+npm run explore -- --grep "order-privacy"
+```
+
+**Test file:** `explore/order-privacy.spec.ts`
 
 ## Expected
 
-<What should have happened. Point to the requirement if there is one.>
+Customer B must not be able to access Customer A's order.
+
+The server should reject the request with `404 Not Found`, as if the order does not exist.
 
 ## Actual
 
-<What happened. Exact status codes, messages and values — copied, not paraphrased.>
+The server responds with `200 OK` and returns Customer A's order to Customer B.
+
+The test expected status `404` but received `200`.
 
 ## Evidence
 
-<Trace, screenshot, the request and response, the pipeline run link.>
+- Playwright test failure showing:
+  - Expected: `404`
+  - Received: `200`
+- Screenshot: `docs/evidence/order-privacy-failure.png`
+- Trace: `test-results/order-privacy-a-customer-c-61390-en-another-customer-s-order-chromium/trace.zip`
+- Vulnerable endpoint: `GET /api/orders/{orderId}`
 
 ## Impact
 
-<Who is affected, how many, and what it costs them or us. This is what gets a bug fixed.>
+Any authenticated customer who obtains or guesses another customer's order number may be able to access that customer's order details.
+
+The exposed information includes customer name, email address, order total, and purchased product details.
+
+This is an Insecure Direct Object Reference (IDOR) vulnerability and an instance of Broken Access Control.
 
 ---
 
-**Security bugs are different.** Never put one in a public issue tracker, a public repository
-or a group chat — that publishes the attack. Report it privately to whoever owns the product,
-the way your company says to. For this course the shop is fake, so a file in your repo is fine.
+**Note:** This is a security issue in the training application's local demo environment. It should be reported privately in a real application.
