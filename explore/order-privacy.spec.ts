@@ -24,12 +24,15 @@ import { PRODUCTS } from '../data/products';
  */
 
 test("a customer cannot open another customer's order", async ({ shopper, shopApi, otherCustomer }) => {
+  test.fail();
+
   // 1. Customer A orders something
-  // TODO
+  await shopApi.addToCart(PRODUCTS.hammer.id);
+  const order = await shopApi.placeOrder();
 
   // 2. Customer B asks for that order by its number
-  // TODO
+  const response = await otherCustomer.getOrder(order.orderId);
 
   // 3. B must be turned away
-  // TODO
+  expect(response.status()).toBe(404);
 });
