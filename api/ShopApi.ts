@@ -77,4 +77,10 @@ export class ShopApi {
   async getOrder(orderId: string): Promise<APIResponse> {
     return this.request.get(`/api/orders/${orderId}`);
   }
+
+  async search(query: string): Promise<APIResponse> {
+  return this.request.get('/api/search', {
+    params: { q: query },
+  });
+}
 }
