@@ -2,7 +2,7 @@
 import { test, expect } from '../fixtures';
 
 test.describe('Search API', () => {
-  test('[ind a product when the search query contains a typo', async ({ shopApi }) => {
+  test('[Find a product when the search query contains a typo', async ({ shopApi }) => {
 
     const response = await shopApi.search('hammet');
     expect(response.status()).toBe(200);
