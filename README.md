@@ -90,7 +90,7 @@ docs/                 Templates: test strategy, bug report, status update. And t
 museum/               Wrong on purpose. Never part of npm test.
 solutions/            Model answers for the Week 6 exercises. Try first, then compare.
 ```
-
+P.S.: The main test workflow runs automatically on pushes and pull requests targeting `main`.
 ## The pipeline
 
 | | `tests.yml` | `nightly.yml` |
